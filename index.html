@@ -11,6 +11,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script src="./require.js" type="text/javascript"></script>
         <script>
           // Initialize Firebase
           var config = {
@@ -34,7 +35,16 @@
                 firebase.auth().signInWithEmailAndPassword(email, password).catch(err=>{
                     console.log('ERR: '+err);
                 }).then(user=>{
-                    alert(user.uid);
+                    console.log('Second stage auth init');
+                    const key = prompt('Enter dynamic key');
+
+                    $.get("http://localhost:6942/authenticate?uid="+user.uid+"&srckey="+key, data=>{
+                        console.log(data);
+                        if (data.auth==="success") {
+                            alert('Authentication Success');
+                        } else alert('Authentication Failure');
+                    });
+
                 });
             }
             
