@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+<title>Project</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+        <script>
+          // Initialize Firebase
+          var config = {
+            apiKey: "AIzaSyCVxplaaD52ZQARrQ11gENihJ6buYdZrTw",
+            authDomain: "fir-haxster.firebaseapp.com",
+            databaseURL: "https://fir-haxster.firebaseio.com",
+            projectId: "firebase-haxster",
+            storageBucket: "firebase-haxster.appspot.com",
+            messagingSenderId: "365096881394"
+          };
+          firebase.initializeApp(config);
+          console.log('Firebase Init Success');
+        </script>
+        <script>
+
+            function signin() {
+                console.log('INIT SIGNIN');
+                var email = document.getElementById("form-username").value;
+                var password = document.getElementById("form-password").value;
+
+                firebase.auth().signInWithEmailAndPassword(email, password).catch(err=>{
+                    console.log('ERR: '+err);
+                }).then(user=>{
+                    alert(user.uid);
+                });
+            }
+            
+            function register() {
+                var username = document.getElementById("username").value;
+                var email = document.getElementById("email").value;
+                var password = document.getElementById("regi-password").value;
+                var confirmPassword = document.getElementById("password_confirm").value;
+                    
+                console.log(username, email, password, confirmPassword);
+
+                firebase.auth().createUserWithEmailAndPassword(email, password).catch(err=>{
+                    console.log('ERR: '+err);
+                }).then(user=>{
+                    console.log('New user created with UID '+user.uid);
+                });
+                
+                $.get("http://localhost:6942/users?username="+username+"&email="+email+"&password="+password, (data)=>{
+                    console.log(data);
+                });
+            }
+        
+        </script>
+<style type="text/css">
+    body {
+        margin: 0;
+        padding: 0;
+        background: url(image.jpg);
+        background-size: cover;
+        background-position: center;
+        font-family: sans-serif;
+    }
+    .form-control{
+		height: 40px;
+		box-shadow: none;
+		color: #969fa4;
+	}
+	.form-control:focus{
+		border-color: #5cb85c;
+	}
+    .form-control, .btn{        
+        border-radius: 3px;
+    }
+	.signup-form{
+		width: 400px;
+		margin: 0 auto;
+		padding: 30px 0;
+	}
+	.signup-form h2{
+		color: #fff;
+        margin: 0 0 15px;
+		position: relative;
+		text-align: center;
+    }
+	.signup-form h2:before, .signup-form h2:after{
+		content: "";
+		height: 2px;
+		width: 30%;
+		background: #d4d4d4;
+		position: absolute;
+		top: 50%;
+		z-index: 2;
+	}	
+	.signup-form h2:before{
+		left: 0;
+	}
+	.signup-form h2:after{
+		right: 0;
+	}
+    .signup-form .hint-text{
+		color: #c8c5c5;
+		margin-bottom: 30px;
+		text-align: center;
+	}
+    .signup-form form{
+		color: #eaeaea;
+		border-radius: 3px;
+    	margin-bottom: 15px;
+        background: rgba(0, 0, 0, 0.35);
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+	.signup-form .form-group{
+		margin-bottom: 20px;
+	}
+	.signup-form input[type="checkbox"]{
+		margin-top: 3px;
+	}
+	.signup-form .btn{        
+        font-size: 16px;
+        font-weight: bold;		
+		min-width: 140px;
+        outline: none !important;
+    }
+	.signup-form .row div:first-child{
+		padding-right: 10px;
+	}
+	.signup-form .row div:last-child{
+		padding-left: 10px;
+	}    	
+    .signup-form a{
+		color: #fff;
+		text-decoration: underline;
+	}
+    .signup-form a:hover{
+		text-decoration: none;
+	}
+	.signup-form form a{
+		color: #5cb85c;
+		text-decoration: none;
+	}	
+	.signup-form form a:hover{
+		text-decoration: underline;
+	}  
+	h1
+	{
+		text-align: center;
+        color: rgba(236, 10, 107, 0.85);
+	}
+	/*#grey
+	{
+background-color: grey;
+	}*/
+	#btn1
+	{
+		padding-top: 20px;
+		width: 200px;
+		padding-left: 100px;
+	}
+</style>
+</head>
+<body>
+<h1>
+	Enhanced Password Authentication For Web Services
+</h1>
+<div class="signup-form" id="grey">
+	<div class="form-group">
+		<h2>
+			Log In
+		</h2>
+            <br />
+			<div class="row">
+				<div class="col-xs-6"><input type="text" id ="form-username" class="form-control" name="form-username" placeholder="Username" required="required"></div>
+				<div class="col-xs-6"><input type="text" id = "form-password" class="form-control" name="form-password" placeholder="Password" required="required"></div>
+			</div>
+            <br />
+			<div class="form-group" id ="btn1">
+			<button type="submit" class="btn btn-success btn-lg btn-block" onclick="signin()">Sign In</button>     
+			</div>   	
+    </div>
+</div>
+<div class="signup-form">
+
+		<h2>Register</h2>
+		<p class="hint-text">Create your account. It's free and only takes a minute.</p>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xs-12"><input type="text" id="username" class="form-control" name="username" placeholder="User Name" required="required"></div>
+                <p1><sub><h5><em>       Username can contain any letters or numbers, without spaces</em></h5></sub></p1>
+            </div>        	
+        </div>
+        <br />
+                <div class="form-group">
+            <input type="email" id="email" class="form-control" name="email" placeholder="Email-Id" required="required">
+            <sub><h5><em>Please provide your E-mail</em></h5></sub>
+        </div>
+        <br />
+        <div class="form-group">
+            <input type="password" id="regi-password" class="form-control" name="password" placeholder="Password" required="required">
+            <sub><h5><em>Password should be at least 4 characters</em></h5></sub>
+        </div>
+        <br />
+        <div class="form-group">
+            <input type="password" id="password_confirm" class="form-control" name="confirm_password" placeholder="Confirm Password" required="required">
+            <sub><h5><em>Re-Enter you Password</em></h5></sub>
+        </div>     
+        <br />
+        		<div class="form-group">
+            <button type="submit" class="btn btn-success btn-lg btn-block" onclick="register()">Register Now</button>
+        </div>
+	
+</div>
+</body>
+</html>                            

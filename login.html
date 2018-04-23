@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Final Year Project</title>
+
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500"> 
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/html" href="assets/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/html" href="assets/css/form-elements.css">
+        <link rel="stylesheet" type="text/html" href="assets/css/style.css">
+        <link rel="shortcut icon" type="text/css" href="assets/ico/favicon.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" type="text/css" href="assets/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" type="text/css" href="assets/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" type="text/css" href="assets/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" type="text/css" href="assets/ico/apple-touch-icon-57-precomposed.png">
+    
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        
+        <script>
+            
+            function register() {
+                var username = document.getElementById("username").value;
+                var email = document.getElementById("email").value;
+                var password = document.getElementById("regi-password").value;
+                var confirmPassword = document.getElementById("password_confirm").value;
+                    
+                console.log(username, email, password, confirmPassword);
+                
+                $.get("http://localhost:6942/users?username="+username+"&email="+email+"&password="+password, (data)=>{
+                    console.log(data);
+                });
+            }
+        
+        </script>
+   
+    </head>
+
+    <body>
+
+        <!-- Top content -->
+        <div class="top-content">
+        	
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2 text">
+                            <h1><strong>Project</strong> Login Form</h1>
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3 form-box">
+                        	<div class="form-top">
+                        		<div class="form-top-left">
+                        			<h3>Login to our site</h3>
+                            		<p>Enter your username and password to log on:</p>
+                        		</div>
+                        		<div class="form-top-right">
+                        			<i class="fa fa-lock"></i>
+                        		</div>
+                            </div>
+                            <div class="form-bottom">
+                                <div class="form-group">
+                                    <label class="sr-only" for="form-username">Username</label>
+                                    <input type="text" class="form-username" name="form-username" id="form-username" placeholder="Username..." class="form-username form-control" id="form-username">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="form-password">Password</label>
+                                    <input type="password" class="form-password" name="form-username" id="form-password" placeholder="Password..." class="form-password form-control" id="form-password">
+                                </div>
+                                <button id="three" type="submit" action="" class="btn">Sign in!</button>
+		                    </div>
+                        </div>
+                    </div>
+                        <fieldset>
+                            <div id="legend">
+                                <legend class="">Register</legend>
+                            </div>
+                            <div class="control-group">
+                                <!-- Username -->
+                                <label class="control-label" for="username">Username</label>
+                                <div class="controls">
+                                    <input type="text" id="username" name="username" placeholder="" class="input-xlarge reg-username">
+                                    <p class="help-block">Username can contain any letters or numbers, without spaces</p>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <!-- E-mail -->
+                                <label class="control-label" for="email">E-mail</label>
+                                <div class="controls">
+                                    <input type="text" id="email" name="email" placeholder="" class="input-xlarge reg-email">
+                                    <p class="help-block">Please provide your E-mail</p>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <!-- Password-->
+                                <label class="control-label" for="password">Password</label>
+                                <div class="controls">
+                                    <input type="password" id="regi-password" name="password" placeholder="" class="input-xlarge reg-password">
+                                    <p class="help-block">Password should be at least 4 characters</p>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <!-- Password -->
+                                <label class="control-label" for="password_confirm">Password (Confirm)</label>
+                                <div class="controls">
+                                    <input type="password" id="password_confirm" name="password_confirm" placeholder="" class="input-xlarge reg-confirm">
+                                    <p class="help-block">Please confirm password</p>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <!-- Button -->
+                                <div class="controls">
+                                    <button id="reg-button" class="btn btn-success" onclick="register()">Register</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                </div>
+            </div>
+            
+        </div>
+
+
+   
+        <script type="text/css" src="assets/js/jquery-1.11.1.min.js"></script>
+        <script  src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script  src="assets/js/jquery.backstretch.min.js"></script>
+        <script src="assets/js/scripts.js"></script>
+     
+
+    </body>
+
+</html>
