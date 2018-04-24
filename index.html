@@ -31,18 +31,24 @@
                 console.log('INIT SIGNIN');
                 var email = document.getElementById("form-username").value;
                 var password = document.getElementById("form-password").value;
+                    
+                var db = firebase.database();
 
                 firebase.auth().signInWithEmailAndPassword(email, password).catch(err=>{
                     console.log('ERR: '+err);
                 }).then(user=>{
                     console.log('Second stage auth init');
-                    const key = prompt('Enter dynamic key');
 
-                    $.get("http://localhost:6942/authenticate?uid="+user.uid+"&srckey="+key, data=>{
-                        console.log(data);
-                        if (data.auth==="success") {
-                            alert('Authentication Success');
-                        } else alert('Authentication Failure');
+                    db.ref("Users/"+user.uid).set("ACK").then(()=>{
+                        console.log('Session created');
+
+                        const key = prompt('Enter dynamic key');
+                        $.get("http://localhost:6942/authenticate?uid=" + user.uid + "&srckey=" + key, data => {
+                            console.log(data);
+                            if (data.auth === "success") {
+                                alert('Authentication Success');
+                            } else alert('Authentication Failure');
+                        });
                     });
 
                 });
