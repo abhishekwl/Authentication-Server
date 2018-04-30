@@ -6,7 +6,7 @@ module.exports = function(app) {
     // Retrieve all Notes
     app.get('/users', users.findAll);
 
-    app.get('/users/:userid', users.find);
+    app.get('/users/:emailId', users.find);
 
     app.delete('/users/:userid', users.delete);
 }

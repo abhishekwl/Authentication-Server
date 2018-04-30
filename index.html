@@ -41,8 +41,12 @@
 
                     db.ref("Users/"+user.uid).set("ACK").then(()=>{
                         console.log('Session created');
+                        alert("Please append the dynamic key to your password")
 
-                        const key = prompt('Enter dynamic key');
+                        password = document.getElementById("form-password").value;
+                        const key = password.substring(password.length-2);
+                        console.log("EXTRACTED KEY = "+key);
+
                         $.get("http://localhost:6942/authenticate?uid=" + user.uid + "&srckey=" + key, data => {
                             console.log(data);
                             if (data.auth === "success") {
@@ -57,19 +61,38 @@
             function register() {
                 var username = document.getElementById("username").value;
                 var email = document.getElementById("email").value;
+                var phoneNumber = document.getElementById("regi-phone").value;
                 var password = document.getElementById("regi-password").value;
                 var confirmPassword = document.getElementById("password_confirm").value;
-                    
-                console.log(username, email, password, confirmPassword);
+                var securityQuestion = document.getElementById("sq").value;
+                var securityAnswer = document.getElementById("sa").value;
+
+                console.log(username, email, phoneNumber, password, confirmPassword, securityQuestion, securityAnswer);
 
                 firebase.auth().createUserWithEmailAndPassword(email, password).catch(err=>{
                     console.log('ERR: '+err);
                 }).then(user=>{
                     console.log('New user created with UID '+user.uid);
+                    $.get("http://localhost:6942/users?username="+username+"&email="+email+"&password="+password+"&phone="+phoneNumber+"&uid="+user.uid+"&sq="+securityQuestion+"&sa="+securityAnswer, (data)=>{
+                        console.log(data);
+                    });
                 });
-                
-                $.get("http://localhost:6942/users?username="+username+"&email="+email+"&password="+password, (data)=>{
+            }
+
+            function forgotPassword() {
+                console.log('INIT FORGOT PASSWORD');
+                var email = document.getElementById("form-username").value;
+
+                $.get("http://localhost:6942/users/"+email, data=>{
                     console.log(data);
+                    const securityQuestion = data.securityQuestion;
+                    const securityAnswer = data.securityAnswer;
+                    const password = data.password;
+
+                    const userAnswer = prompt(securityQuestion);
+                    if(userAnswer===securityAnswer) alert("Your password is '"+password+"'");
+                    else alert("Incorrect Answer.");
+
                 });
             }
         
@@ -193,13 +216,22 @@ background-color: grey;
 		</h2>
             <br />
 			<div class="row">
-				<div class="col-xs-6"><input type="text" id ="form-username" class="form-control" name="form-username" placeholder="Username" required="required"></div>
+				<div class="col-xs-6"><input type="text" id ="form-username" class="form-control" name="form-username" placeholder="Email ID" required="required"></div>
 				<div class="col-xs-6"><input type="text" id = "form-password" class="form-control" name="form-password" placeholder="Password" required="required"></div>
-			</div>
+            </div>
+            
             <br />
-			<div class="form-group" id ="btn1">
-			<button type="submit" class="btn btn-success btn-lg btn-block" onclick="signin()">Sign In</button>     
-			</div>   	
+            <div class="row">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-lg btn-block" onclick="signin()">Sign In</button>     
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-danger btn-lg btn-block" onclick="forgotPassword()">Forgot Password</button>
+                </div>
+            </div>
+			
+            
     </div>
 </div>
 <div class="signup-form">
@@ -209,26 +241,48 @@ background-color: grey;
         <div class="form-group">
             <div class="row">
                 <div class="col-xs-12"><input type="text" id="username" class="form-control" name="username" placeholder="User Name" required="required"></div>
-                <p1><sub><h5><em>       Username can contain any letters or numbers, without spaces</em></h5></sub></p1>
+                <p1><sub><h5><em>Username can contain any letters or numbers, without spaces</em></h5></sub></p1>
             </div>        	
         </div>
         <br />
-                <div class="form-group">
+
+        <div class="form-group">
             <input type="email" id="email" class="form-control" name="email" placeholder="Email-Id" required="required">
             <sub><h5><em>Please provide your E-mail</em></h5></sub>
         </div>
         <br />
+        
+        <div class="form-group">
+            <input type="number" id="regi-phone" class="form-control" name="phone" placeholder="Phone Number" required="required">
+            <sub><h5><em>Please enter a valid contact number</em></h5></sub>
+        </div>
+        <br />
+
         <div class="form-group">
             <input type="password" id="regi-password" class="form-control" name="password" placeholder="Password" required="required">
             <sub><h5><em>Password should be at least 4 characters</em></h5></sub>
         </div>
         <br />
+
         <div class="form-group">
             <input type="password" id="password_confirm" class="form-control" name="confirm_password" placeholder="Confirm Password" required="required">
             <sub><h5><em>Re-Enter you Password</em></h5></sub>
-        </div>     
+        </div>
         <br />
-        		<div class="form-group">
+
+        <div class="form-group">
+            <input type="text" id="sq" class="form-control" name="Security Question" placeholder="Security Question" required="required">
+            <sub><h5><em>Enter a custom unique security question</em></h5></sub>
+        </div>
+        <br />
+        
+        <div class="form-group">
+            <input type="text" id="sa" class="form-control" name="Security Answer" placeholder="Answer" required="required">
+            <sub><h5><em>Enter the answer to your question</em></h5></sub>
+        </div>
+        <br />
+
+        <div class="form-group">
             <button type="submit" class="btn btn-success btn-lg btn-block" onclick="register()">Register Now</button>
         </div>
 	
