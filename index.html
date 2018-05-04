@@ -38,10 +38,20 @@
                     alert('ERR: '+err);
                 }).then(user=>{
                     console.log('Second stage auth init');
+                    var userDbRef = db.ref("Users/"+user.uid);
 
-                    db.ref("Users/"+user.uid).set("ACK").then(()=>{
+                    userDbRef.set("ACK").then(()=>{
                         console.log('Session created');
                         alert("Please append the dynamic key to your password");
+                        setTimeout(()=>{
+                            userDbRef.once("value", snapshot=>{
+                                if(snapshot.val()!="COMPLETE") {
+                                    userDbRef.set("COMPLETE").then(()=>{
+                                        alert("Session expired");
+                                    });
+                                }
+                            });
+                        }, 30000);
                     });
 
                 });
@@ -297,6 +307,7 @@ background-color: grey;
 
         <div class="form-group row">
             <select id="security-question" class="col-xs-12">
+                <option value="default" disabled selected>Select a Security Question</option>
                 <option value="sec1">What colour was your bicycle?</option>
                 <option value="sec2">What is your favorite song?</option>
                 <option value="sec3">What tree is present on your street?</option>
