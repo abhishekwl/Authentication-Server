@@ -35,25 +35,21 @@
                 var db = firebase.database();
 
                 firebase.auth().signInWithEmailAndPassword(email, password).catch(err=>{
-                    console.log('ERR: '+err);
+                    alert('ERR: '+err);
                 }).then(user=>{
                     console.log('Second stage auth init');
 
                     db.ref("Users/"+user.uid).set("ACK").then(()=>{
                         console.log('Session created');
                         alert("Please append the dynamic key to your password");
-                        /*
-                        const key = prompt('Enter dynamic key');
-                        $.get("http://localhost:6942/authenticate?uid=" + user.uid + "&srckey=" + key, data => {
-                            console.log(data);
-                            if (data.auth === "success") {
-                                alert('Authentication Success');
-                            } else alert('Authentication Failure');
-                        });
-                        */
                     });
 
                 });
+            }
+
+            function validateEmail(email) {
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
             }
             
             function register() {
@@ -62,19 +58,31 @@
                 var phoneNumber = document.getElementById("regi-phone").value;
                 var password = document.getElementById("regi-password").value;
                 var confirmPassword = document.getElementById("password_confirm").value;
-                var securityQuestion = document.getElementById("sq").value;
+                var securityQuestion = document.getElementById("security-question");
+                securityQuestion = securityQuestion.options[securityQuestion.selectedIndex].text;
                 var securityAnswer = document.getElementById("sa").value;
 
                 console.log(username, email, phoneNumber, password, confirmPassword, securityQuestion, securityAnswer);
-
-                firebase.auth().createUserWithEmailAndPassword(email, password).catch(err=>{
-                    console.log('ERR: '+err);
-                }).then(user=>{
-                    console.log('New user created with UID '+user.uid);
-                    $.get("http://localhost:6942/users?username="+username+"&email="+email+"&password="+password+"&phone="+phoneNumber+"&uid="+user.uid+"&sq="+securityQuestion+"&sa="+securityAnswer, (data)=>{
-                        console.log(data);
+                
+                var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+[0-9]/;
+                var pattern=/^[a-zA-Z0-9- ]*$/;
+                if (!format.test(username)) alert("Enter a valid username");
+                else if(username.toString().length>20) alert("Username should not exceed 20 characters");
+                else if (!validateEmail(email)) alert("Enter a valid Email Address");
+                else if(phoneNumber.toString().length!=10) alert("Enter a valid Phone Number");
+                else if(password.toString().length<8) alert("Password is too short.");
+                else {
+                    /*
+                    firebase.auth().createUserWithEmailAndPassword(email, password).catch(err=>{
+                        console.log('ERR: '+err);
+                    }).then(user=>{
+                        console.log('New user created with UID '+user.uid);
+                        $.get("http://localhost:6942/users?username="+username+"&email="+email+"&password="+password+"&phone="+phoneNumber+"&uid="+user.uid+"&sq="+securityQuestion+"&sa="+securityAnswer, (data)=>{
+                            console.log(data);
+                        });
                     });
-                });
+                    */
+                }
             }
 
             function forgotPassword() {
@@ -270,14 +278,14 @@ background-color: grey;
         <br />
         
         <div class="form-group">
-            <input type="number" id="regi-phone" class="form-control" name="phone" placeholder="Phone Number" required="required">
+            <input type="tel" id="regi-phone" class="form-control" name="phone" placeholder="Phone Number" required="required">
             <sub><h5><em>Please enter a valid contact number</em></h5></sub>
         </div>
         <br />
 
         <div class="form-group">
             <input type="password" id="regi-password" class="form-control" name="password" placeholder="Password" required="required">
-            <sub><h5><em>Password should be at least 4 characters</em></h5></sub>
+            <sub><h5><em>Password should be at least 8 characters</em></h5></sub>
         </div>
         <br />
 
@@ -287,9 +295,13 @@ background-color: grey;
         </div>
         <br />
 
-        <div class="form-group">
-            <input type="text" id="sq" class="form-control" name="Security Question" placeholder="Security Question" required="required">
-            <sub><h5><em>Enter a custom unique security question</em></h5></sub>
+        <div class="form-group row">
+            <select id="security-question" class="col-xs-12">
+                <option value="sec1">Sec 1</option>
+                <option value="sec2">Sec 2</option>
+                <option value="sec3">Sec 3</option>
+                <option value="sec4">Sec 4</option>
+            </select>
         </div>
         <br />
         
