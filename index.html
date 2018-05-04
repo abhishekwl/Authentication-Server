@@ -65,14 +65,14 @@
                 console.log(username, email, phoneNumber, password, confirmPassword, securityQuestion, securityAnswer);
                 
                 var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+[0-9]/;
-                var pattern=/^[a-zA-Z0-9- ]*$/;
-                if (!format.test(username)) alert("Enter a valid username");
+                //var pattern=/^[a-zA-Z0-9- ]*$/;
+                if (format.test(username)) alert("Enter a valid username");
                 else if(username.toString().length>20) alert("Username should not exceed 20 characters");
                 else if (!validateEmail(email)) alert("Enter a valid Email Address");
                 else if(phoneNumber.toString().length!=10) alert("Enter a valid Phone Number");
                 else if(password.toString().length<8) alert("Password is too short.");
                 else {
-                    /*
+                    
                     firebase.auth().createUserWithEmailAndPassword(email, password).catch(err=>{
                         console.log('ERR: '+err);
                     }).then(user=>{
@@ -81,7 +81,7 @@
                             console.log(data);
                         });
                     });
-                    */
+
                 }
             }
 
@@ -297,10 +297,11 @@ background-color: grey;
 
         <div class="form-group row">
             <select id="security-question" class="col-xs-12">
-                <option value="sec1">Sec 1</option>
-                <option value="sec2">Sec 2</option>
-                <option value="sec3">Sec 3</option>
-                <option value="sec4">Sec 4</option>
+                <option value="sec1">What colour was your bicycle?</option>
+                <option value="sec2">What is your favorite song?</option>
+                <option value="sec3">What tree is present on your street?</option>
+                <option value="sec4">What is your favorite TV Show?</option>
+                <option value="sec4">What is your dream destination?</option>
             </select>
         </div>
         <br />
