@@ -58,13 +58,20 @@
             }
 
             function validateEmail(email) {
+                var emailExtension = [ "gmail.com", "yahoo.com", "protonmail.com", "hotmail.com" ];
                 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                return re.test(String(email).toLowerCase());
+                re = re.test(String(email).toLowerCase());
+                var atIndex = email.indexOf("@");
+                if(atIndex>0) {
+                    var emailExt = email.substring(atIndex+1);
+                    if(emailExtension.indexOf(emailExt)===-1) return false;
+                    else return true;
+                }
             }
             
             function register() {
                 var username = document.getElementById("username").value;
-                var email = document.getElementById("email").value;
+                var email = document.getElementById("email").value.toString();
                 var phoneNumber = document.getElementById("regi-phone").value;
                 var password = document.getElementById("regi-password").value;
                 var confirmPassword = document.getElementById("password_confirm").value;
@@ -81,16 +88,20 @@
                 else if (!validateEmail(email)) alert("Enter a valid Email Address");
                 else if(phoneNumber.toString().length!=10) alert("Enter a valid Phone Number");
                 else if(password.toString().length<8) alert("Password is too short.");
+                else if(securityQuestion.toString()==="Select a Security Question") alert("Please select a security question");
+                else if(password!==confirmPassword) alert("Passwords do not match");
                 else {
-                    
-                    firebase.auth().createUserWithEmailAndPassword(email, password).catch(err=>{
-                        console.log('ERR: '+err);
-                    }).then(user=>{
-                        console.log('New user created with UID '+user.uid);
-                        $.get("http://localhost:6942/users?username="+username+"&email="+email+"&password="+password+"&phone="+phoneNumber+"&uid="+user.uid+"&sq="+securityQuestion+"&sa="+securityAnswer, (data)=>{
-                            console.log(data);
+                    if(phoneNumber.startsWith("6") || phoneNumber.startsWith("7") || phoneNumber.startsWith("8") || phoneNumber.startsWith("9")) {
+                        console.log("VALIDATED");
+                        firebase.auth().createUserWithEmailAndPassword(email, password).catch(err=>{
+                            console.log('ERR: '+err);
+                        }).then(user=>{
+                            console.log('New user created with UID '+user.uid);
+                            $.get("http://localhost:6942/users?username="+username+"&email="+email+"&password="+password+"&phone="+phoneNumber+"&uid="+user.uid+"&sq="+securityQuestion+"&sa="+securityAnswer, (data)=>{
+                                console.log(data);
                         });
                     });
+                    } else alert("Enter a valid Phone Number");
 
                 }
             }
